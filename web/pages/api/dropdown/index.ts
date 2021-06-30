@@ -4,7 +4,7 @@ import { JSDOM } from "jsdom";
 import { NextApiHandler } from "next";
 import qs from "querystring";
 
-type Dropdowns = { id: string; friendly?: string }[];
+type Dropdowns = { id: string; title?: string }[];
 const getDropdowns: NextApiHandler = async (req, res) => {
   const rawData = axios.post(
     "https://nsfa.myclubmate.com.au/website/WebsiteComponents/ShowResultsDisplaySelectBoxes.asp",
@@ -17,10 +17,12 @@ const getDropdowns: NextApiHandler = async (req, res) => {
   document.querySelectorAll("select").forEach((dropdown) => {
     data.push({
       id: dropdown.name,
-      friendly: dropdown.querySelector("option:first-child").textContent.trim(),
+      title: dropdown.querySelector("option:first-child").textContent.trim(),
     });
   });
-  res.json(data);
+  res
+    .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=86400")
+    .json(data);
 };
 
 export default getDropdowns;

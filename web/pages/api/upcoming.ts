@@ -40,7 +40,9 @@ const getUpcoming: NextApiHandler = async (req, res) => {
         )} ${splitDate[1]} ${splitDate[2].replace(/'/g, "20")}`
       ).getTime(),
       ageGrp: game.children[3].textContent,
-      div: parseInt(game.children[4].textContent) || game.children[4].textContent.trim(),
+      div:
+        parseInt(game.children[4].textContent) ||
+        game.children[4].textContent.trim(),
       home: {
         club: game.children[5].textContent.trim(),
         flag: game.children[6].children[0].innerHTML.trim(),
@@ -55,11 +57,15 @@ const getUpcoming: NextApiHandler = async (req, res) => {
       refs: parseInt(game.children[12].textContent) || false,
       ground: {
         name: game.children[13].textContent.trim(),
-        link: `https://nsfa.myclubmate.com.au/website/${game.children[13].querySelector("a").href}`,
+        link: `https://nsfa.myclubmate.com.au/website/${
+          game.children[13].querySelector("a").href
+        }`,
       },
     });
   });
-  res.json(data);
+  res
+    .setHeader("Cache-Control", "s-maxage=60,stale-while-revalidate=86400")
+    .json(data);
 };
 
 export default getUpcoming;

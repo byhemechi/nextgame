@@ -3,7 +3,7 @@ import { QueryParameters } from "./_query";
 import qs from 'querystring';
 import { JSDOM } from "jsdom";
 
-type DropdownValues = { id: string; friendly: string }[];
+type DropdownValues = { id: string; name: string }[];
 
 type Dropdowns = {
   ClubCode?: DropdownValues;
@@ -28,7 +28,7 @@ const getDropdowns = async (queryData: QueryParameters): Promise<Dropdowns> => {
   document.querySelectorAll("select").forEach((dropdown) => {
     const values: DropdownValues = [];
     dropdown.querySelectorAll("option").forEach((option, n) => {
-      if(n > 0) values.push({ id: option.value, friendly: option.textContent.trim() });
+      if(n > 0) values.push({ id: option.value, name: option.textContent.trim() });
     });
     Object.assign(data, {
       [dropdown.name]: values,

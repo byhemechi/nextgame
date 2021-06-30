@@ -6,7 +6,9 @@ import { QueryParameters } from "../_query";
 
 const getClubs: NextApiHandler = async (req, res) => {
   const queryData: QueryParameters = req.query;
-  res.json((await getDropdowns(queryData))?.[req.query.id.toString()] ?? []);
+  res
+  .setHeader("Cache-Control", "s-maxage=60, stale-while-revalidate=86400")
+    .json((await getDropdowns(queryData))?.[req.query.id.toString()] ?? []);
 };
 
 export default getClubs;
